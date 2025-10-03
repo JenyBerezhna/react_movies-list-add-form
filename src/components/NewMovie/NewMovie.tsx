@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import { TextField } from '../TextField';
+import { Movie } from '../../types/Movie';
 import './NewMovie.scss';
 
-const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/i;
+interface NewMovieProps {
+  onAdd?: (movie: Movie) => void;
+}
 
-export const NewMovie = () => {
+export const NewMovie: React.FC<NewMovieProps> = ({ onAdd = () => {} }) => {
+const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z.]{2,6})([\/\w.-]*)*\/?$/i;
+
+
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -32,6 +38,14 @@ export const NewMovie = () => {
       return;
     }
 
+    onAdd({
+      title: form.title.trim(),
+      description: form.description.trim(),
+      imgUrl: form.imgUrl.trim(),
+      imdbUrl: form.imdbUrl.trim(),
+      imdbId: form.imdbId.trim(),
+    });
+
     // Reset form and validation state
     setForm({
       title: '',
@@ -51,7 +65,7 @@ export const NewMovie = () => {
         name="title"
         label="Title"
         value={form.title}
-        onChange={newValue => handleChange('title')(newValue)}
+        onChange={handleChange('title')}
         required
       />
 
